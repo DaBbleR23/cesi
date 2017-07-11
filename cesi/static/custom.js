@@ -1,5 +1,5 @@
 var $login = function(){
-    var $url = "/login/control";
+    var $url = "login/control";
     $.ajax({
         url: $url,
         dataType: 'json',
@@ -15,7 +15,7 @@ var $login = function(){
                     closeWith: ['click']
                 });
             }else{
-               window.location='/'; 
+                location.reload();
             }
         },
         complete: function(){
@@ -29,7 +29,7 @@ var $login = function(){
 
 var $adduser= function(){
     $(".activity-log").remove();
-    var $link = "/add/user";
+    var $link = "add/user";
     $.ajax({
         url: $link,
         dataType: 'json',
@@ -51,7 +51,7 @@ var $adduser= function(){
                 $login_panel.append('<div class="add_user panel-body"></div>');
 
                 var $panel_body =$('.add_user');
-                $panel_body.append('<form class="adduserform" method="post" action="/add/user/handler">');
+                $panel_body.append('<form class="adduserform" method="post" action="add/user/handler">');
 
                 var $form = $panel_body.children('form').first();
                 $form.append('<fieldset></fieldset>');
@@ -78,7 +78,7 @@ var $adduser= function(){
 }
 
 var $adduserhandler = function(){
-    var $url = "/add/user/handler";
+    var $url = "add/user/handler";
     $.ajax({
         url: $url,
         dataType: 'json',
@@ -121,7 +121,7 @@ var $adduserhandler = function(){
 
 var $showdeluserpage = function(){
     $(".activity-log").remove();
-    var $link = "/delete/user";
+    var $link = "delete/user";
     $.ajax({
         url: $link,
         dataType: 'json',
@@ -184,8 +184,8 @@ var $showdeluserpage = function(){
 
 var $delete_user = function(){
     var $username = $(this).attr('name')
-    var $url = "/delete/user/"+$username
-    if($url=="/delete/user/admin"){
+    var $url = "delete/user/"+$username
+    if($url=="delete/user/admin"){
         noty({
             timeout: 5000,
             layout: 'bottom',
@@ -218,7 +218,7 @@ var $delete_user = function(){
 var $changepassword = function(){
     $(".activity-log").remove();
     $username = $(this).attr('name');
-    $link = "/change/password/"+$username;
+    $link = "change/password/"+$username;
     $.ajax({
         url: $link,
         dataType: 'json',
@@ -240,7 +240,7 @@ var $changepassword = function(){
 
                 var $panel= $middlegrid.children('div').first();
                 $panel.append('<div class="panel-heading"><h3 class="panel-title">Change Password</h3></div>');
-                $panel.append('<div class="panel-body"><form class="changepasswordform" method="post" action="/change/password/'+$username+'/handler"><fieldset></fieldset></form></div>');
+                $panel.append('<div class="panel-body"><form class="changepasswordform" method="post" action="change/password/'+$username+'/handler"><fieldset></fieldset></form></div>');
 
                 var $fieldset =$middlegrid.find('fieldset');
                 $fieldset.append('<div class="form-group"><input class="form-control" placeholder="Old password" name="old" type="password" autofocus></div>');
@@ -266,7 +266,7 @@ var $changepassword = function(){
 
 var $passwordhandler = function(){
     var $username=$(this).attr('name');
-    var $url = "/change/password/"+$username+"/handler";
+    var $url = "change/password/"+$username+"/handler";
     $.ajax({
         url: $url,
         dataType: 'json',
@@ -362,7 +362,7 @@ var $buttonactions = function(){
                     if( data['data']['state']==20){
                         $restart = $td.children('button').first();
                         $restart.attr('class',"btn btn-primary btn-block");
-                        $name = "/node/"+data['nodename'] + "/process/" + data['data']['group'] + ":" + data['data']['name'] + "/restart";
+                        $name = "node/"+data['nodename'] + "/process/" + data['data']['group'] + ":" + data['data']['name'] + "/restart";
                         $restart.attr('name',$name );
                         $restart.attr('value',"Restart");
                         $restart.html("Restart");
@@ -370,14 +370,14 @@ var $buttonactions = function(){
                         $td = $td.next();
                         $stop = $td.children('button').first();
                         $stop.attr('class',"btn btn-primary btn-block");
-                        $name2 = "/node/"+data['nodename'] + "/process/" + data['data']['group'] + ":" + data['data']['name'] + "/stop";
+                        $name2 = "node/"+data['nodename'] + "/process/" + data['data']['group'] + ":" + data['data']['name'] + "/stop";
                         $stop.attr('name',$name2 );
                         $stop.attr('value',"Stop");
                         $stop.html("Stop");
                     }else if(data['data']['state']==0){
                         $start = $td.children('button');
                         $start.attr('class',"btn btn-primary btn-block");
-                        $name = "/node/"+data['nodename'] + "/process/" + data['data']['group'] + ":" + data['data']['name'] + "/start";
+                        $name = "node/"+data['nodename'] + "/process/" + data['data']['group'] + ":" + data['data']['name'] + "/start";
                         $start.attr('name',$name );
                         $start.attr('value',"Start");
                         $start.html("Start");
@@ -445,7 +445,7 @@ var $selectgroupenv = function(){
     });
     var $group_name = $(this).find('input').attr('group');
     var $environment_name = $(this).find('input').attr('env');
-    var $url = "/group/"+$group_name+"/environment/"+$environment_name
+    var $url = "group/"+$group_name+"/environment/"+$environment_name
 
     var $emptycontrol = 0;
     var $checkcount = 0;
@@ -574,19 +574,19 @@ var $selectgroupenv = function(){
                             if( $state==20 ){
                                 $tr.append('<td></td>');
                                 $td = $tr.children('td').last();
-                                $td.append('<button place="group" class="btn btn-primary btn-block act" env="'+$environment_name+'" name="/node/'+$nodename+'/process/'+$group_name+':'+$name+'/restart" value="Restart">Restart</button>');
+                                $td.append('<button place="group" class="btn btn-primary btn-block act" env="'+$environment_name+'" name="node/'+$nodename+'/process/'+$group_name+':'+$name+'/restart" value="Restart">Restart</button>');
                                 var $btn_restart = $td.children('button').first();
                                 $btn_restart.click($buttonactions);
         
                                 $tr.append('<td></td>');
                                 var $td = $tr.children('td').last();
-                                $td.append('<button place="group" class="btn btn-primary btn-block act" env="'+$environment_name+'" name="/node/'+$nodename+'/process/'+$group_name+':'+$name+'/stop" value="Stop">Stop</button>');
+                                $td.append('<button place="group" class="btn btn-primary btn-block act" env="'+$environment_name+'" name="node/'+$nodename+'/process/'+$group_name+':'+$name+'/stop" value="Stop">Stop</button>');
                                 var $btn_stop = $td.children('button').first();
                                 $btn_stop.click($buttonactions);
                             }else if($state==0){
                                 $tr.append('<td></td>');
                                 var $td= $tr.children('td').last();;
-                                $td.append('<button place="group" class="btn btn-primary btn-block act" env="'+$environment_name+'" name="/node/'+$nodename+'/process/'+$group_name+':'+$name+'/start" value="Start">Start</button>');
+                                $td.append('<button place="group" class="btn btn-primary btn-block act" env="'+$environment_name+'" name="node/'+$nodename+'/process/'+$group_name+':'+$name+'/start" value="Start">Start</button>');
                                 var $btn_restart = $td.children('button').first();
                                 $btn_restart.click($buttonactions);
         
@@ -600,7 +600,7 @@ var $selectgroupenv = function(){
     
                         if($usertype == 0 || $usertype == 1 || $usertype == 2 ){
                             //Readlog
-                             $tr.append('<td><a class="btn btn-primary btn-block act" nodename="'+$nodename+'" processgroup="'+$group_name+'" processname="'+$name+'" url="/node/'+$nodename+'/process/'+$group_name+':'+$name+'/readlog"> Readlog </a></td>');
+                             $tr.append('<td><a class="btn btn-primary btn-block act" nodename="'+$nodename+'" processgroup="'+$group_name+'" processname="'+$name+'" url="node/'+$nodename+'/process/'+$group_name+':'+$name+'/readlog"> Readlog </a></td>');
                              var $readlog = $tr.children('td').last().children('a').first();
     
                              $readlog.click(function(){
@@ -747,19 +747,19 @@ var $selectgroupenv = function(){
                                 if( $state==20 ){
                                     $tr.append('<td></td>');
                                     $td = $tr.children('td').last();
-                                        $td.append('<button place="group" class="btn btn-primary btn-block act" env="'+$environment_name+'" name="/node/'+$nodename+'/process/'+$group_name+':'+$name+'/restart" value="Restart">Restart</button>');
+                                        $td.append('<button place="group" class="btn btn-primary btn-block act" env="'+$environment_name+'" name="node/'+$nodename+'/process/'+$group_name+':'+$name+'/restart" value="Restart">Restart</button>');
                                 var $btn_restart = $td.children('button').first();
                                     $btn_restart.click($buttonactions);
       
                                     $tr.append('<td></td>');
                                     var $td = $tr.children('td').last();
-                                    $td.append('<button place="group" class="btn btn-primary btn-block act" env="'+$environment_name+'" name="/node/'+$nodename+'/process/'+$group_name+':'+$name+'/stop" value="Stop">Stop</button>');
+                                    $td.append('<button place="group" class="btn btn-primary btn-block act" env="'+$environment_name+'" name="node/'+$nodename+'/process/'+$group_name+':'+$name+'/stop" value="Stop">Stop</button>');
                                     var $btn_stop = $td.children('button').first();
                                     $btn_stop.click($buttonactions);
                                 }else if($state==0){
                                     $tr.append('<td></td>');
                                     var $td= $tr.children('td').last();;
-                                    $td.append('<button place="group" class="btn btn-primary btn-block act" env="'+$environment_name+'" name="/node/'+$nodename+'/process/'+$group_name+':'+$name+'/start" value="Start">Start</button>');
+                                    $td.append('<button place="group" class="btn btn-primary btn-block act" env="'+$environment_name+'" name="node/'+$nodename+'/process/'+$group_name+':'+$name+'/start" value="Start">Start</button>');
                                     var $btn_restart = $td.children('button').first();
                                     $btn_restart.click($buttonactions);
       
@@ -773,7 +773,7 @@ var $selectgroupenv = function(){
     
 			    if($usertype == 0 || $usertype == 1 || $usertype == 2){
                             //Readlog
-                            $tr.append('<td><a class="btn btn-primary btn-block act" nodename="'+$nodename+'" processgroup="'+$group_name+'" processname="'+$name+'" url="/node/'+$nodename+'/process/'+$group_name+':'+$name+'/readlog"> Readlog </a></td>');
+                            $tr.append('<td><a class="btn btn-primary btn-block act" nodename="'+$nodename+'" processgroup="'+$group_name+'" processname="'+$name+'" url="node/'+$nodename+'/process/'+$group_name+':'+$name+'/readlog"> Readlog </a></td>');
                             var $readlog = $tr.children('td').last().children('a').first();
     
                             $readlog.click(function(){
@@ -906,7 +906,7 @@ var $selectnode = function(){
         });
         $newuncheckednodelist=[];
         $.ajax({
-            url: "/node/name/list",
+            url: "node/name/list",
             dataType: 'json',
             async: false,
             success: function(nodenames){
@@ -959,7 +959,7 @@ var $selectnode = function(){
     });
 
     $appendlist.forEach(function(nodename) { 
-        var $url = "/node/"+nodename
+        var $url = "node/"+nodename
         $.ajax({
             url: $url,
             dataType: 'json',
@@ -1027,19 +1027,19 @@ var $selectnode = function(){
                        if( $state==20 ){
                            $tr_p.append('<td></td>');
                            $td_p = $tr_p.children('td').last();
-                           $td_p.append('<button place="node" class="btn btn-primary btn-block act" name="/node/'+nodename+'/process/'+$group+':'+$name+'/restart" value="Restart">Restart</button>');
+                           $td_p.append('<button place="node" class="btn btn-primary btn-block act" name="node/'+nodename+'/process/'+$group+':'+$name+'/restart" value="Restart">Restart</button>');
                            var $btn_restart = $td_p.children('button').first();
                            $btn_restart.click($buttonactions);
 
                            $tr_p.append('<td></td>');
                            var $td_p = $tr_p.children('td').last();
-                           $td_p.append('<button place="node" class="btn btn-primary btn-block act" name="/node/'+nodename+'/process/'+$group+':'+$name+'/stop" value="Stop">Stop</button>');
+                           $td_p.append('<button place="node" class="btn btn-primary btn-block act" name="node/'+nodename+'/process/'+$group+':'+$name+'/stop" value="Stop">Stop</button>');
                            var $btn_stop = $td_p.children('button').first();
                            $btn_stop.click($buttonactions);
                         }else if($state==0){
                            $tr_p.append('<td></td>');
                            var $td_p = $tr_p.children('td').last();;
-                           $td_p.append('<button place="node" class="btn btn-primary btn-block act" name="/node/'+nodename+'/process/'+$group+':'+$name+'/start" value="Start">Start</button>');
+                           $td_p.append('<button place="node" class="btn btn-primary btn-block act" name="node/'+nodename+'/process/'+$group+':'+$name+'/start" value="Start">Start</button>');
                            var $btn_restart = $td_p.children('button').first();
                            $btn_restart.click($buttonactions);
 
@@ -1053,7 +1053,7 @@ var $selectnode = function(){
 
                     if($usertype == 0 || $usertype == 1 || $usertype == 2){
                         //Readlog
-                        $tr_p.append('<td><a class="btn btn-primary btn-block act" nodename="'+nodename+'" processgroup="'+$group+'" processname="'+$name+'" url="/node/'+nodename+'/process/'+$group+':'+$name+'/readlog"> Readlog </a></td>');
+                        $tr_p.append('<td><a class="btn btn-primary btn-block act" nodename="'+nodename+'" processgroup="'+$group+'" processname="'+$name+'" url="node/'+nodename+'/process/'+$group+':'+$name+'/readlog"> Readlog </a></td>');
                         var $readlog = $tr_p.children('td').last().children('a').first();
     
                         $readlog.click(function(){
@@ -1154,7 +1154,7 @@ var $multievent = function(){
             var $place = $(this).parent().first().next().next().next().next().next().next().find('button').attr('place');
             var $environment = $(this).parent().first().next().next().next().next().next().next().find('button').attr('env');
             $.ajax({
-                url: "/node/"+$nodename+"/process/"+$procname+"/"+$actname,
+                url: "node/"+$nodename+"/process/"+$procname+"/"+$actname,
                 dataType: 'json',
                 success: function(data){
                     if(data['status'] == "Success"){
@@ -1194,7 +1194,7 @@ var $multievent = function(){
                             if( data['data']['state']==20){
                                 $restart = $td.children('button').first();
                                 $restart.attr('class',"btn btn-primary btn-block");
-                                $name = "/node/"+data['nodename'] + "/process/" + data['data']['group'] + ":" + data['data']['name'] + "/restart";
+                                $name = "node/"+data['nodename'] + "/process/" + data['data']['group'] + ":" + data['data']['name'] + "/restart";
                                 $restart.attr('name',$name );
                                 $restart.attr('value',"Restart");
                                 $restart.html("Restart");
@@ -1202,14 +1202,14 @@ var $multievent = function(){
                                 $td = $td.next();
                                 $stop = $td.children('button').first();
                                 $stop.attr('class',"btn btn-primary btn-block");
-                                $name2 = "/node/"+data['nodename'] + "/process/" + data['data']['group'] + ":" + data['data']['name'] + "/stop";
+                                $name2 = "node/"+data['nodename'] + "/process/" + data['data']['group'] + ":" + data['data']['name'] + "/stop";
                                 $stop.attr('name',$name2 );
                                 $stop.attr('value',"Stop");
                                 $stop.html("Stop");
                             }else if(data['data']['state']==0){
                                 $start = $td.children('button');
                                 $start.attr('class',"btn btn-primary btn-block");
-                                $name = "/node/"+data['nodename'] + "/process/" + data['data']['group'] + ":" + data['data']['name'] + "/start";
+                                $name = "node/"+data['nodename'] + "/process/" + data['data']['group'] + ":" + data['data']['name'] + "/start";
                                 $start.attr('name',$name );
                                 $start.attr('value',"Start");
                                 $start.html("Start");
@@ -1255,7 +1255,7 @@ $( document ).ready(function() {
     $(".ajax3").click($selectgroupenv);
 
         $.ajax({
-            url: "/activitylog",
+            url: "activitylog",
             dataType: 'json',
             success: function(log){
                 if(log['status'] == "success"){

@@ -1,11 +1,17 @@
-import xmlrpclib
 import ConfigParser
+import xmlrpclib
 from datetime import datetime, timedelta
+
+import os
 from flask import jsonify
 
-CONFIG_FILE = "/etc/cesi.conf"
+dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../')
+
+config_file_name = 'cesi.conf'
+CONFIG_FILE = os.path.join(dir_path, 'cesi.conf')
+
+
 class Config:
-    
     def __init__(self, CFILE):
         self.CFILE = CFILE
         self.cfg = ConfigParser.ConfigParser()
@@ -26,7 +32,6 @@ class Config:
             if name[:5] == 'group':
                 self.group_list.append(name[6:])
 
-        
     def getNodeConfig(self, node_name):
         self.node_name = "node:%s" % (node_name)
         self.username = self.cfg.get(self.node_name, 'username')
@@ -51,45 +56,43 @@ class Config:
     def getHost(self):
         return str(self.cfg.get('cesi', 'host'))
 
-class NodeConfig:
 
+class NodeConfig:
     def __init__(self, node_name, host, port, username, password):
         self.node_name = node_name
         self.host = host
         self.port = port
         self.username = username
         self.password = password
-            
+
 
 class Node:
-
     def __init__(self, node_config):
         self.long_name = node_config.node_name
         self.name = node_config.node_name[5:]
-        self.connection = Connection(node_config.host, node_config.port, node_config.username, node_config.password).getConnection()
-        self.process_list=[]
-        self.process_dict2={}
+        self.connection = Connection(node_config.host, node_config.port, node_config.username,
+                                     node_config.password).getConnection()
+        self.process_list = []
+        self.process_dict2 = {}
         for p in self.connection.supervisor.getAllProcessInfo():
             self.process_list.append(ProcessInfo(p))
-            self.process_dict2[p['group']+':'+p['name']] = ProcessInfo(p)
+            self.process_dict2[p['group'] + ':' + p['name']] = ProcessInfo(p)
         self.process_dict = self.connection.supervisor.getAllProcessInfo()
 
 
 class Connection:
-
     def __init__(self, host, port, username, password):
         self.host = host
         self.port = port
         self.username = username
         self.password = password
-        self.address = "http://%s:%s@%s:%s/RPC2" %(self.username, self.password, self.host, self.port)
+        self.address = "http://%s:%s@%s:%s/RPC2" % (self.username, self.password, self.host, self.port)
 
     def getConnection(self):
         return xmlrpclib.Server(self.address)
-        
+
 
 class ProcessInfo:
-
     def __init__(self, dictionary):
         self.dictionary = dictionary
         self.name = self.dictionary['name']
@@ -110,8 +113,8 @@ class ProcessInfo:
         self.seconds = self.now - self.start
         self.uptime = str(timedelta(seconds=self.seconds))
 
+
 class JsonValue:
-    
     def __init__(self, process_name, node_name, event):
         self.process_name = process_name
         self.event = event
@@ -120,19 +123,17 @@ class JsonValue:
         self.node = Node(self.node_config)
 
     def success(self):
-        return jsonify(status = "Success",
-                       code = 80,
-                       message = "%s %s %s event succesfully" %(self.node_name, self.process_name, self.event),
-                       nodename = self.node_name,
-                       data = self.node.connection.supervisor.getProcessInfo(self.process_name))
+        return jsonify(status="Success",
+                       code=80,
+                       message="%s %s %s event succesfully" % (self.node_name, self.process_name, self.event),
+                       nodename=self.node_name,
+                       data=self.node.connection.supervisor.getProcessInfo(self.process_name))
 
-    def error(self, code, payload):     
+    def error(self, code, payload):
         self.code = code
         self.payload = payload
-        return jsonify(status = "Error",
-                       code = self.code,
-                       message = "%s %s %s event unsuccesful" %(self.node_name, self.process_name, self.event),
-                       nodename = self.node_name,
-                       payload = self.payload)
- 
-
+        return jsonify(status="Error",
+                       code=self.code,
+                       message="%s %s %s event unsuccesful" % (self.node_name, self.process_name, self.event),
+                       nodename=self.node_name,
+                       payload=self.payload)
